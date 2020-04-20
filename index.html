@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Licensed under MIT. Go crazy. -->
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -47,9 +48,38 @@
       <div class="text">
         My Nintendo Switch Online friend code is
         <div class="code">
-          <span class="muted">SW-</span>2480<span class="muted">-</span>0757<span class="muted">-</span>9410
+          <span class="muted">SW-</span><span class="spinner">2480</span><span class="muted">-</span><span class="spinner">0757</span><span class="muted">-</span><span class="spinner">9410</span>
         </div>
       </div>
     </div>
+
+    <script>
+      (function() {
+        const spin = el => {
+          const actualNumbers = el.innerText.split("").map(n => parseInt(n))
+          let randomNumbers = new Array(actualNumbers.length)
+          
+          let finalSpin = false;
+
+          // not terribly optimized, please don't yell at me
+          let spinInterval = setInterval(() => {
+            actualNumbers.forEach((realNumber, index) => {
+              if(finalSpin && randomNumbers[index] === actualNumbers[index]) return
+              let rng = Math.floor(Math.random() * 10)
+              randomNumbers[index] = rng
+            })
+
+            el.innerText = randomNumbers.join("")
+            if(finalSpin && randomNumbers.join("") === actualNumbers.join("")) clearInterval(spinInterval)
+          }, 50)
+
+          setTimeout(() => {
+            finalSpin = true
+          }, 3000)
+        }
+
+        Array.from(document.getElementsByClassName("spinner")).forEach(el => spin(el))
+      })()
+    </script>
   </body>
 </html>
